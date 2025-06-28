@@ -238,4 +238,51 @@ document.getElementById("searchInput").addEventListener("input", function () {
   renderEntries(filtered);
 });
 
+const CLIENT_ID = '110959004914-3fd3fshr7930n6js2v0m074d1e1cqb1o.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+function initClient() {
+  gapi.client.init({
+    clientId: CLIENT_ID,
+    scope: SCOPES,
+    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+  }).then(() => {
+    gapi.auth2.getAuthInstance().signIn().then(() => {
+      alert("✅ Google Account লগইন হয়েছে!");
+    });
+  });
+}
+
+function handleClientLoad() {
+  gapi.load('client:auth2', initClient);
+}
+
+// 📤 ডেটা Google Drive এ সেভ করুন
+async function saveEntriesToDrive() {
+  const fileContent = JSON.stringify(entries);
+  const file = new Blob([fileContent], { type: 'application/json' });
+
+  const metadata = {
+    name: 'hishabkhata_backup.json',
+    mimeType: 'application/json'
+  };
+
+  const accessToken = gapi.auth.getToken().access_token;
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  form.append('file', file);
+
+  const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+    body: form
+  });
+
+  if (response.ok) {
+    alert("☁️ Google Drive-এ Sync সফল!");
+  } else {
+    alert("❌ Sync ব্যর্থ হয়েছে!");
+  }
+}
+
 renderEntries();
