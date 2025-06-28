@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>লোকাল হিসাব খাতা</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#28a745">
+</head>
+<body>
+  <div class="container">
+    <input type="text" id="searchInput" placeholder="🔍 কাস্টমারের নাম বা বিবরণ লিখুন" />
+    <h3 id="totalAmount">💰 নগদ: ৳0.00 | 🧾 বাকি: ৳0.00 | 📊 মোট: ৳0.00</h3>
+   
+    <h2>🧾 লোকাল হিসাব খাতা</h2>
+
+    <form id="entryForm">
+      <input type="text" id="name" placeholder="কাস্টমারের নাম" required />
+      <input type="number" id="amount" placeholder="টাকার পরিমাণ" required />
+      <input type="text" id="note" placeholder="বিবরণ (ঐচ্ছিক)" />
+      <select id="type">
+        <option value="cash">নগদ বিক্রয়</option>
+        <option value="due">বাকি বিক্রয়</option>
+      </select>
+      
+      <button type="submit" class="btn-plus">➕ যোগ করুন</button>
+    </form>
+
+    <input type="date" id="filterDate" />
+    <select id="filterCustomer" onchange="filterByCustomer()">
+      <option value="">-- কাস্টমার ফিল্টার --</option>
+    </select>
+    
+      <div class="btn-group">
+        
+            <button onclick="filterByDate()" class="btn">ফিল্টার করুন</button>
+          
+          <button onclick="generatePDF()" class="btn">📄 PDF</button>
+          
+          <button onclick="exportBackup()" class="btn">🔁 ব্যাকআপ</button>
+          
+          <button onclick="importBackup()" class="btn">📥 ইমপোর্ট</button>
+          
+          <button onclick="generateMonthlyReport() " class="btn">📅 মাসিক রিপোর্ট</button>
+          
+          <button onclick="generateMonthlyPDF()" class="btn">📄 মাসিক PDF</button>
+      </div>
+      
+      
+    <input type="file" id="importFile" style="display:none" accept=".json" onchange="handleFile(event)" />
+
+   
+     <ul id="entryList"></ul>
+
+  </div>
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log("✔ Service Worker Registered!", reg))
+        .catch(err => console.error("❌ Service Worker Failed:", err));
+    });
+  }
+</script>
+</body>
+</html>
