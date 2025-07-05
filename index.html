@@ -2,75 +2,129 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>লোকাল হিসাব খাতা</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#28a745">
-</head>
-<body>
-  <div class="container">
-    <input type="text" id="searchInput" placeholder="🔍 কাস্টমারের নাম বা বিবরণ লিখুন" />
-    <h3 id="totalAmount">💰 নগদ: ৳0.00 | 🧾 বাকি: ৳0.00 | 📊 মোট: ৳0.00</h3>
-   
-    <h2>🧾 লোকাল হিসাব খাতা</h2>
 
+  <!-- Theme & Fonts -->
+  <meta name="theme-color" content="#28a745" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="google-signin-client_id" content="1023277203967-1fbeirvf2q9jthl1ssc0b6h1bl98vp80.apps.googleusercontent.com">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+  
+  
+</head>
+
+<body>
+  
+    <button class="dark" onclick="toggleDarkMode()">🌙 ডার্ক মোড</button>
+
+    <!-- Header -->
+    <header>
+      <h2>🧾 লোকাল হিসাব খাতা</h2>
+      <p classapp-info">সহজে কাস্টমারের নগদ ও বাকি হিসাব রাখুন</p>
+    </header>
+    <!-- সারাংশ -->
+        <div class="total-summary" id="totalAmount">
+          <div class="summary-box">
+            <div class="summary-icon">💰</div>
+            <p class="summary-label">নগদ</p>
+            <p class="summary-value" id="cashTotal">৳0.00</p>
+          </div>
+          <div class="summary-box">
+            <div class="summary-icon">🧾</div>
+            <p class="summary-label">বাকি</p>
+            <p class="summary-value" id="dueTotal">৳0.00</p>
+          </div>
+          <div class="summary-box">
+            <div class="summary-icon">📊</div>
+            <p class="summary-label">মোট</p>
+            <p class="summary-value" id="grandTotal">৳0.00</p>
+          </div>
+        </div>
+
+
+
+    <!-- সার্চ -->
+    <input type="text" id="searchInput" placeholder="🔍 কাস্টমারের নাম বা বিবরণ লিখুন" />
+
+    <!-- এন্ট্রি ফর্ম -->
     <form id="entryForm">
-      <input type="text" id="name" placeholder="কাস্টমারের নাম" required />
-      <input type="number" id="amount" placeholder="টাকার পরিমাণ" required />
-      <input type="text" id="note" placeholder="বিবরণ (ঐচ্ছিক)" />
-      <select id="type">
-        <option value="cash">নগদ বিক্রয়</option>
-        <option value="due">বাকি বিক্রয়</option>
-      </select>
-      
+      <div class="form-group">
+        <label for="name">কাস্টমারের নাম</label>
+        <input type="text" id="name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="amount">টাকার পরিমাণ</label>
+        <input type="number" id="amount" required />
+      </div>
+
+      <div class="form-group">
+        <label for="note">বিবরণ (ঐচ্ছিক)</label>
+        <input type="text" id="note" />
+      </div>
+
+      <div class="form-group">
+        <label for="type">লেনদেনের ধরন</label>
+        <select id="type">
+          <option value="cash">নগদ বিক্রয়</option>
+          <option value="due">বাকি বিক্রয়</option>
+        </select>
+      </div>
+
       <button type="submit" class="btn-plus">➕ যোগ করুন</button>
     </form>
 
-    <input type="date" id="filterDate" />
-    <select id="filterCustomer" onchange="filterByCustomer()">
-      <option value="">-- কাস্টমার ফিল্টার --</option>
-    </select>
+    <!-- ফিল্টার -->
+    <div class="filter-section">
+      <input type="date" id="filterDate" />
+      <select id="filterCustomer" onchange="filterByCustomer()">
+        <option value="">-- কাস্টমার ফিল্টার --</option>
+      </select>
+    </div>
+
+    <!-- বাটন গ্রুপ -->
+    <div class="btn-group">
+      <button onclick="filterByDate()" class="btn">🔎 ফিল্টার</button>
+      <button onclick="generatePDF()" class="btn">📄 PDF</button>
+      <button onclick="exportBackup()" class="btn">🔁 ব্যাকআপ</button>
+      <button onclick="importBackup()" class="btn">📥 ইমপোর্ট</button>
+      <button onclick="generateMonthlyReport()" class="btn">📅 মাসিক রিপোর্ট</button>
+      <button onclick="generateMonthlyPDF()" class="btn">📄 মাসিক PDF</button>
+     
+    </div>
+      
+    <!-- ফাইল ইমপোর্ট -->
+    <input type="file" id="importFile" style="display: none;" accept=".json" onchange="handleFile(event)" />
     
-      <div class="btn-group">
-        
-            <button onclick="filterByDate()" class="btn">ফিল্টার করুন</button>
-          
-          <button onclick="generatePDF()" class="btn">📄 PDF</button>
-          
-          <button onclick="exportBackup()" class="btn">🔁 ব্যাকআপ</button>
-          
-          <button onclick="importBackup()" class="btn">📥 ইমপোর্ট</button>
-          
-          <button onclick="generateMonthlyReport() " class="btn">📅 মাসিক রিপোর্ট</button>
-          
-          <button onclick="generateMonthlyPDF()" class="btn">📄 মাসিক PDF</button>
-
-
+    <!-- weekly report -->
+    <div class="report-summary">
+      <div class="report-box">
+        <span class="report-title">📅 আজকের নগদ</span>
+        <span id="todayCash" class="report-value">৳0.00</span>
       </div>
-      
-      
-    <input type="file" id="importFile" style="display:none" accept=".json" onchange="handleFile(event)" />
+      <div class="report-box">
+        <span class="report-title">🗓️ ৭ দিনের মোট</span>
+        <span id="weeklyTotal" class="report-value">৳0.00</span>
+      </div>
+    </div>
 
-   
-     <ul id="entryList"></ul>
-
+    <!-- এন্ট্রি লিস্ট -->
+    <ul id="entryList" class="entry-list"></ul>
   </div>
   
+  
 
+  <!-- Footer -->
+  <footer>
+    &copy; ২০২৫ | লোকাল হিসাব খাতা | সকল অধিকার সংরক্ষিত
+  </footer>
+
+  <!-- JS Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
   <script src="app.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log("✔ Service Worker Registered!", reg))
-        .catch(err => console.error("❌ Service Worker Failed:", err));
-    });
-  }
-</script>
-
-
 </body>
 </html>
