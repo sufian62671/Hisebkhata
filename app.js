@@ -30,8 +30,9 @@ function renderEntries(filtered = entries) {
     list.appendChild(li);
   });
 
-  document.getElementById("totalAmount").innerText =
-    `💰 নগদ: ৳${cashTotal.toFixed(2)} | 🧾 বাকি: ৳${dueTotal.toFixed(2)} | 📊 মোট: ৳${(cashTotal + dueTotal).toFixed(2)}`;
+document.getElementById("cashTotal").innerText = `৳${cashTotal.toFixed(2)}`;
+document.getElementById("dueTotal").innerText = `৳${dueTotal.toFixed(2)}`;
+document.getElementById("grandTotal").innerText = `৳${(cashTotal + dueTotal).toFixed(2)}`;
 
   updateCustomerFilterOptions();
 }
@@ -238,6 +239,34 @@ document.getElementById("searchInput").addEventListener("input", function () {
   renderEntries(filtered);
 });
 
+function toggleDarkMode() {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+}
 
+// পেজ লোড হলে ডার্ক মোড চালু থাকলে সেট করো
+window.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark");
+  }
+});
+
+function updateReports() {
+  const today = new Date().toISOString().split("T")[0];
+  const todayCash = entries
+    .filter(e => e.date === today && e.type === "cash")
+    .reduce((sum, e) => sum + parseFloat(e.amount), 0);
+
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+  const weeklyTotal = entries
+    .filter(e => new Date(e.date) >= oneWeekAgo)
+    .reduce((sum, e) => sum + parseFloat(e.amount), 0);
+
+  document.getElementById("todayCash").innerText = `৳${todayCash.toFixed(2)}`;
+  document.getElementById("weeklyTotal").innerText = `৳${weeklyTotal.toFixed(2)}`;
+}
 
 renderEntries();
+updateReports();
