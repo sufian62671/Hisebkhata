@@ -1,3 +1,10 @@
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/Hisebkhata/service-worker.js')
+    .then(reg => console.log("✅ SW registered:", reg.scope))
+    .catch(err => console.error("❌ SW registration failed:", err));
+}
+
 lconst form = document.getElementById("entryForm");
 const list = document.getElementById("entryList");
 
@@ -6,6 +13,8 @@ let entries = JSON.parse(localStorage.getItem("entries")) || [];
 function saveEntries() {
   localStorage.setItem("entries", JSON.stringify(entries));
 }
+
+
 
 function renderEntries(filtered = entries) {
   list.innerHTML = "";
@@ -272,7 +281,7 @@ function updateReports() {
 renderEntries();
 updateReports();
 
-navigator.serviceWorker.register('/hisebkhata009/service-worker.js')
+navigator.serviceWorker.register('Hisebkhata/service-worker.js')
   .then(reg => {
     console.log("✅ Service Worker রেজিস্টার হয়েছে:", reg.scope);
   })
