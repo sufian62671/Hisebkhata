@@ -1,21 +1,23 @@
 {
   "name": "লোকাল হিসাব খাতা",
   "short_name": "হিসাব খাতা",
-  "start_url": "/index.html",
+  "description": "লোকাল কাস্টমারদের জন্য সহজ হিসাব খাতা অ্যাপ",
+  "start_url": "/Hisebkhata/index.html",
+  "scope": "/Hisebkhata/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#28a745",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "icons": [
-  {
-    "src": "/hisebkhata009/icons/icon-192.png",
-    "sizes": "192x192",
-    "type": "image/png"
-  },
-  {
-    "src": "/hisebkhata009/icons/icon-512.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }
-]
+    {
+      "src": "/Hisebkhata/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Hisebkhata/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
