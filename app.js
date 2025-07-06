@@ -1,4 +1,4 @@
-const form = document.getElementById("entryForm");
+lconst form = document.getElementById("entryForm");
 const list = document.getElementById("entryList");
 
 let entries = JSON.parse(localStorage.getItem("entries")) || [];
@@ -268,5 +268,39 @@ function updateReports() {
   document.getElementById("weeklyTotal").innerText = `৳${weeklyTotal.toFixed(2)}`;
 }
 
+
 renderEntries();
 updateReports();
+
+navigator.serviceWorker.register('/hisebkhata009/service-worker.js')
+  .then(reg => {
+    console.log("✅ Service Worker রেজিস্টার হয়েছে:", reg.scope);
+  })
+  .catch(err => {
+    console.error("❌ Service Worker রেজিস্টার হয়নি:", err.message);
+  });
+
+
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'block';
+
+  installBtn.addEventListener('click', () => {
+    installBtn.style.display = 'none';
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choiceResult => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('✅ ইনস্টলেশন শুরু হয়েছে');
+      } else {
+        console.log('❌ ইউজার ইনস্টলেশন বাতিল করেছে');
+      }
+      deferredPrompt = null;
+    });
+  });
+});
+
+
